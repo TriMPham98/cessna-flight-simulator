@@ -1,10 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/cannon";
-import {
-  EffectComposer,
-  Bloom,
-  ToneMapping,
-} from "@react-three/postprocessing";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Suspense } from "react";
 import { Leva } from "leva";
 
@@ -43,7 +39,6 @@ function App() {
 
         <EffectComposer>
           <Bloom intensity={0.5} luminanceThreshold={0.9} />
-          <ToneMapping />
         </EffectComposer>
       </Canvas>
 
