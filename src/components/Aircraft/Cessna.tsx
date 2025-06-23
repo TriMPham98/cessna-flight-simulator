@@ -6,41 +6,45 @@ import { useFlightStore } from "../../store/flightStore";
 
 export default function Cessna() {
   const groupRef = useRef<Group>(null);
-  const { position, rotation, velocity, throttle, aileron, elevator, rudder } =
-    useFlightStore();
+  const { throttle, aileron, elevator, rudder } = useFlightStore();
 
   useFrame((state, delta) => {
     if (!groupRef.current) return;
 
-    // Simple physics simulation
-    const speed = throttle * 50; // Max speed in m/s
-    const forward = new Vector3(0, 0, -speed * delta);
+    // Get current position and rotation from the mesh
+    const currentPosition = groupRef.current.position;
+    const currentRotation = groupRef.current.rotation;
 
     // Apply control inputs to rotation
-    const newRotation = rotation.clone();
-    newRotation.x += elevator * delta * 2;
-    newRotation.y += rudder * delta * 2;
-    newRotation.z += aileron * delta * 2;
+    currentRotation.x += elevator * delta * 2;
+    currentRotation.y += rudder * delta * 2;
+    currentRotation.z += aileron * delta * 2;
 
-    // Update store with new values
-    useFlightStore.getState().updateRotation(newRotation);
+    // Simple physics simulation - move forward based on throttle
+    const speed = throttle * 20; // Max speed in m/s
+    const forward = new Vector3(0, 0, -speed * delta);
 
-    // Apply forward movement
-    forward.applyEuler(groupRef.current.rotation);
-    const newPosition = position.clone().add(forward);
-    useFlightStore.getState().updatePosition(newPosition);
+    // Apply rotation to movement direction
+    forward.applyEuler(currentRotation);
+    currentPosition.add(forward);
 
-    // Apply to mesh
-    groupRef.current.position.copy(newPosition);
-    groupRef.current.rotation.setFromVector3(newRotation);
+    // Update store with current values
+    const storePosition = new Vector3().copy(currentPosition);
+    const storeRotation = new Vector3(
+      currentRotation.x,
+      currentRotation.y,
+      currentRotation.z
+    );
+    const velocity = new Vector3().copy(forward).divideScalar(delta);
+
+    useFlightStore.getState().updatePosition(storePosition);
+    useFlightStore.getState().updateRotation(storeRotation);
+    useFlightStore.getState().updateVelocity(velocity);
+
+    // Update altitude in store (convert to feet)
+    const altitudeFeet = currentPosition.y * 3.28084;
+    useFlightStore.setState({ altitude: Math.max(0, altitudeFeet) });
   });
-
-  useEffect(() => {
-    // Initialize position
-    if (groupRef.current) {
-      groupRef.current.position.copy(position);
-    }
-  }, []);
 
   return (
     <group ref={groupRef} position={[0, 10, 0]}>

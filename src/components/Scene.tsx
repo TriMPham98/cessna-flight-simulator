@@ -1,10 +1,32 @@
 import { OrbitControls, Sky, Plane } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
 import Cessna from "./Aircraft/Cessna";
 import Environment from "./Environment/Environment";
+import { useFlightStore } from "../store/flightStore";
 
 export default function Scene() {
+  const controlsRef = useRef<any>(null);
+  const { camera } = useThree();
+  const { position } = useFlightStore();
+
+  useFrame(() => {
+    if (controlsRef.current && position) {
+      // Make camera follow aircraft with offset
+      const offset = [0, 15, 25]; // Camera position relative to aircraft
+      if (controlsRef.current.target) {
+        controlsRef.current.target.copy(position);
+      }
+
+      // Update camera position to follow aircraft
+      camera.position.set(
+        position.x + offset[0],
+        position.y + offset[1],
+        position.z + offset[2]
+      );
+    }
+  });
+
   return (
     <>
       {/* Lighting */}
@@ -32,12 +54,13 @@ export default function Scene() {
 
       {/* Controls */}
       <OrbitControls
-        target={[0, 0, 0]}
+        ref={controlsRef}
+        target={[0, 10, 0]}
         enablePan={true}
         enableZoom={true}
         enableRotate={true}
         minDistance={5}
-        maxDistance={1000}
+        maxDistance={200}
       />
     </>
   );
