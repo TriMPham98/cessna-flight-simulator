@@ -20,11 +20,11 @@ export default function Controls() {
         case "d": // Roll right
           setAileron(0.5);
           break;
-        case "arrowup": // Pitch up
-          setElevator(0.5);
-          break;
-        case "arrowdown": // Pitch down
+        case "arrowup": // Pitch down
           setElevator(-0.5);
+          break;
+        case "arrowdown": // Pitch up
+          setElevator(0.5);
           break;
         case "arrowleft": // Yaw left
           setRudder(-0.5);
@@ -70,7 +70,7 @@ export default function Controls() {
         <div className="space-y-1 text-xs">
           <div>W/S: Throttle Up/Down</div>
           <div>A/D: Roll Left/Right</div>
-          <div>↑/↓: Pitch Up/Down</div>
+          <div>↑/↓: Pitch Down/Up</div>
           <div>←/→: Yaw Left/Right</div>
         </div>
       </div>
