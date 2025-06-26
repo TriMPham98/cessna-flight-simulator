@@ -14,11 +14,11 @@ export default function Controls() {
         case "s": // Throttle down
           setThrottle(Math.max(0, useFlightStore.getState().throttle - 0.1));
           break;
-        case "a": // Roll left
-          setAileron(-0.5);
-          break;
-        case "d": // Roll right
+        case "a": // Roll right
           setAileron(0.5);
+          break;
+        case "d": // Roll left
+          setAileron(-0.5);
           break;
         case "arrowup": // Pitch down
           setElevator(-0.5);
@@ -69,7 +69,7 @@ export default function Controls() {
         <h3 className="text-lg font-bold mb-2">Controls</h3>
         <div className="space-y-1 text-xs">
           <div>W/S: Throttle Up/Down</div>
-          <div>A/D: Roll Left/Right</div>
+          <div>A/D: Roll Right/Left</div>
           <div>↑/↓: Pitch Down/Up</div>
           <div>←/→: Yaw Right/Left</div>
         </div>
