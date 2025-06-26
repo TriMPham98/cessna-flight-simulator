@@ -26,11 +26,11 @@ export default function Controls() {
         case "arrowdown": // Pitch up
           setElevator(0.5);
           break;
-        case "arrowleft": // Yaw left
-          setRudder(-0.5);
-          break;
-        case "arrowright": // Yaw right
+        case "arrowleft": // Yaw right
           setRudder(0.5);
+          break;
+        case "arrowright": // Yaw left
+          setRudder(-0.5);
           break;
       }
     };
@@ -71,7 +71,7 @@ export default function Controls() {
           <div>W/S: Throttle Up/Down</div>
           <div>A/D: Roll Left/Right</div>
           <div>↑/↓: Pitch Down/Up</div>
-          <div>←/→: Yaw Left/Right</div>
+          <div>←/→: Yaw Right/Left</div>
         </div>
       </div>
     </div>
